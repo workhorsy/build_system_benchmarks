@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
+import os
+import lib_raise_c as C
+import lib_raise_fs as FS
+import lib_raise_libraries as Libraries
+import lib_raise_os as OS
+import lib_raise_process as Process
+
+
+def _configure():
+	cc = C.get_default_compiler()
+	C.save_compiler(cc)
+
+def build():
+	"""Builds the program."""
+	OS.require_not_root()
+	_configure()
+
+	# Get the names of all the C files
+	code_files = []
+	for root, dirs, files in os.walk('c'):
+		for file_name in files:
+			entry = os.path.join(root, file_name)
+			if entry.endswith('.c') and os.path.isfile(entry):
+				name = entry.split('.')[0]
+				code_files.append(name)
+
+	# Concurrently build each C file into an object
+	Process.concurrent_start()
+	for f in code_files:
+		object_name = '{0}.o'.format(f)
+		code_name = '{0}.c'.format(f)
+		C.build_object(object_name, [code_name])
+	Process.concurrent_end()
+
+	# Link all the objects into the program
+	object_files = [s + '.o' for s in code_files]
+	C.build_program('hellomake.exe', object_files)
+
+	# Run the program
+	C.run_print('./hellomake.exe')
+
+
+
+
