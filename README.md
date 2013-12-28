@@ -3,21 +3,25 @@ Build Systems Benchmarks
 
 Build system speed tests. 10,000 C files spread over 100 directories.
 
+Please notify/fork if you find any bugs or misinformation. Please add
+more tests for other build systems.
+
 Build systems tested:
 ===========================================
-* GNU Make
-* CMake
-* Raise
+* [GNU Make](http://www.gnu.org/software/make/)
+* [CMake](http://www.cmake.org/)
+* [Raise](https://launchpad.net/raise)
 
-Comming soon:
+Coming soon?:
 ===========================================
-* Ninja
-* Waf
-* Tup
-* Redo
-* Rake
-* SCons
-* Maven
+* [Ninja](http://martine.github.io/ninja/)
+* [Waf](http://code.google.com/p/waf/)
+* [Tup](http://gittup.org/tup/)
+* [Redo](https://github.com/apenwarr/redo)
+* [Rake](http://rake.rubyforge.org/)
+* [SCons](http://www.scons.org/)
+* [Maven](http://maven.apache.org/)
+* [Gradle](http://www.gradle.org/)
 
 
 * * *
