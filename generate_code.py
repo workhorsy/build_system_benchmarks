@@ -6,7 +6,7 @@ LIB_COUNT = 100
 
 
 def rmdir(name):
-	if os.path.exists(name):
+	if os.path.isdir(name):
 		shutil.rmtree(name)
 
 # Make code dir

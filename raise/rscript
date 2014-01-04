@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import os
+import shutil
 import lib_raise_c as C
 import lib_raise_fs as FS
 import lib_raise_libraries as Libraries
@@ -30,13 +31,13 @@ def build():
 	# Concurrently build each C file into an object
 	Process.concurrent_start()
 	for f in code_files:
-		object_name = '{0}.o'.format(f)
+		object_name = 'build/{0}.o'.format(f)
 		code_name = '{0}.c'.format(f)
 		C.build_object(object_name, [code_name])
 	Process.concurrent_end()
 
 	# Link all the objects into the program
-	object_files = [s + '.o' for s in code_files]
+	object_files = ['build/{0}.o'.format(s) for s in code_files]
 	C.build_program('hellomake.exe', object_files)
 
 	# Run the program
