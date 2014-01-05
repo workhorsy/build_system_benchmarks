@@ -11,18 +11,18 @@ Build systems tested:
 * [GNU Make](http://www.gnu.org/software/make/)
 * [CMake](http://www.cmake.org/)
 * [Raise](https://launchpad.net/raise)
+* [Waf](http://code.google.com/p/waf/)
 
 Coming soon?:
 ===========================================
 * [Ninja](http://martine.github.io/ninja/)
-* [Waf](http://code.google.com/p/waf/)
 * [Tup](http://gittup.org/tup/)
 * [Redo](https://github.com/apenwarr/redo)
 * [Rake](http://rake.rubyforge.org/)
 * [SCons](http://www.scons.org/)
 * [Maven](http://maven.apache.org/)
 * [Gradle](http://www.gradle.org/)
-
+* [GYP](https://code.google.com/p/gyp/)
 
 * * *
 
@@ -47,6 +47,13 @@ Raise:
 ------------------------------------------
     first build: 5m6.383s, 22.5 MB Ram
     second build: 0m2.553s, 22.5 MB Ram
+    notes: 4 cores
+
+
+Waf:
+------------------------------------------
+    first build: 14m2.592s, 61 MB Ram
+    second build: 1m26.242s, 20 MB Ram
     notes: 4 cores
 
 
@@ -95,4 +102,21 @@ Raise:
 
     # Build the files and get the time
     time ./raise build
+
+
+Waf:
+------------------------------------------
+    # Run generate_code.py to make the 10,000 files
+    python generate_code.py
+
+    # Move to the dir
+    cd waf
+
+    # Setup
+    ./waf configure
+
+    # Build the files and get the time
+    time ./waf build -j4
+
+
 

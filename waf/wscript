@@ -1,0 +1,25 @@
+
+import os
+
+def options(opt):
+	opt.load('compiler_c')
+
+def configure(conf):
+	conf.load('compiler_c')
+
+def build(bld):
+	# Get the names of all the C files
+	code_files = []
+	for n in bld.path.ant_glob('c/*/*.c'):
+		code_files.append(os.path.splitext(n.srcpath())[0])
+
+	# Build the objects
+	for f in code_files:
+		bld.objects(source='{0}.c'.format(f), target='{0}'.format(f))
+
+	# Build main
+	bld.program(source='c/main.c', target='c/main',  use=str.join(' ', code_files))
+
+
+
+

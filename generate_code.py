@@ -10,6 +10,7 @@ def rmdir(name):
 		shutil.rmtree(name)
 
 # Make code dir
+print('Creating code directory ...')
 rmdir('c')
 os.mkdir('c')
 
@@ -17,6 +18,7 @@ os.mkdir('c')
 os.chdir('c')
 
 # Make the C headers and libraries
+print('Creating header and libraries ...')
 for d in range(DIR_COUNT):
 	os.mkdir(str(d))
 	os.chdir(str(d))
@@ -37,6 +39,7 @@ for d in range(DIR_COUNT):
 	os.chdir('..')
 
 # Make the C main
+print('Creating main ...')
 with open('main.c', 'wb') as f:
 	code = ""
 	for d in range(DIR_COUNT):
@@ -57,18 +60,21 @@ with open('main.c', 'wb') as f:
 os.chdir('..')
 
 # Remove old code
+print('Removing old code ...')
 rmdir('cmake/c')
 rmdir('make/c')
 rmdir('raise/c')
 rmdir('waf/c')
 
 # Copy the code to each build directory
+print('Copying code ...')
 shutil.copytree('c', 'cmake/c')
 shutil.copytree('c', 'make/c')
 shutil.copytree('c', 'raise/c')
 shutil.copytree('c', 'waf/c')
 
 # Remove generated code
+print('Cleanup ...')
 rmdir('c')
 
 
