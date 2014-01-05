@@ -1,7 +1,7 @@
 Build Systems Benchmarks
 ===========================================
 
-Build system speed tests. 10,000 C files spread over 100 directories.
+Build system speed tests. 1,000 C files spread over 10 directories.
 
 Please notify/fork if you find any bugs or misinformation. Please add
 more tests for other build systems.
@@ -26,97 +26,35 @@ Coming soon?:
 
 * * *
 
-
-Results:
+Instructions:
 ===========================================
-GNU Make:
-------------------------------------------
-    first build: 51m25.352s, 8GB Ram
-    second build: 115m4.830s, 5 GB Ram
-    notes: 1 core only. And obviously should not use so much ram.
+In the generate_code.py file:
 
+DIR_COUNT - Number of directories to generate.
 
-CMake:
-------------------------------------------
-    first build: 2m39.384s, 69 MB Ram
-    second build: 0m53.025s, 53 MB Ram
-    notes: 4 cores
+LIB_COUNT - Number of libraries to generate in each directory.
 
-
-Raise:
-------------------------------------------
-    first build: 5m6.383s, 22.5 MB Ram
-    second build: 0m2.553s, 22.5 MB Ram
-    notes: 4 cores
-
-
-Waf:
-------------------------------------------
-    first build: 14m2.592s, 61 MB Ram
-    second build: 1m26.242s, 20 MB Ram
-    notes: 4 cores
-
+TOOLS_TO_TEST - List of tools to benchmark.
 
 * * *
 
 
-Instructions:
+Results:
 ===========================================
-GNU Make:
-------------------------------------------
-    # Run generate_code.py to make the 10,000 files
-    python generate_code.py
-
-    # Move to the dir
-    cd make
-
-    # Build the files and get the time
-    time make -j4
-
-
-CMake:
-------------------------------------------
-    # Run generate_code.py to make the 10,000 files
-    python generate_code.py
-
-    # Move to the dir
-    cd cmake
-
-    # Setup
-    cmake .
-
-    # Build the files and get the time
-    time make -j4
-
-
-Raise:
-------------------------------------------
-    # Run generate_code.py to make the 10,000 files
-    python generate_code.py
-
-    # Move to the dir
-    cd raise
-
-    # Setup
-    ./raise update
-
-    # Build the files and get the time
-    time ./raise build
-
-
-Waf:
-------------------------------------------
-    # Run generate_code.py to make the 10,000 files
-    python generate_code.py
-
-    # Move to the dir
-    cd waf
-
-    # Setup
-    ./waf configure
-
-    # Build the files and get the time
-    time ./waf build -j4
+    Starting benchmark with 10 directories containing 100 files each ...
+    Generating code ...
+    CMake benchmark ...
+        clean time      : 0:00:55
+        incremental time: 0:00:03
+    Waf benchmark ...
+        clean time      : 0:00:49
+        incremental time: 0:00:05
+    Raise benchmark ...
+        clean time      : 0:01:02
+        incremental time: 0:00:02
+    Make benchmark ...
+        clean time      : 0:00:39
+        incremental time: 0:00:05
 
 
 
