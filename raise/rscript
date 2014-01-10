@@ -37,11 +37,11 @@ def build():
 	Process.concurrent_end()
 
 	# Link all the objects into the program
-	object_files = ['build/{0}.o'.format(s) for s in code_files]
-	C.build_program('hellomake.exe', object_files)
+	object_files = ['build/c/*/*.o', 'build/c/*.o']
+	C.build_program('hello.exe', object_files)
 
 	# Run the program
-	C.run_print('./hellomake.exe')
+	C.run_print('./hello.exe')
 
 
 
