@@ -5,19 +5,19 @@ import os
 import shutil
 import lib_raise_c as C
 import lib_raise_fs as FS
-import lib_raise_libraries as Libraries
-import lib_raise_os as OS
+import lib_raise_find as Find
+import lib_raise_users as Users
 import lib_raise_process as Process
 
 
 def _configure():
 	cc = C.get_default_compiler()
-	C.save_compiler(cc)
+	return cc
 
 def build():
 	"""Builds the program."""
-	OS.require_not_root()
-	_configure()
+	Users.require_not_root()
+	cc = _configure()
 
 	# Get the names of all the C files
 	code_files = []
@@ -33,12 +33,12 @@ def build():
 	for f in code_files:
 		object_name = 'build/{0}.o'.format(f)
 		code_name = '{0}.c'.format(f)
-		C.build_object(object_name, [code_name])
+		cc.build_object(object_name, [code_name])
 	Process.concurrent_end()
 
 	# Link all the objects into the program
 	object_files = ['build/c/*/*.o', 'build/c/*.o']
-	C.build_program('hello.exe', object_files)
+	cc.build_program('hello.exe', object_files)
 
 	# Run the program
 	C.run_print('./hello.exe')
