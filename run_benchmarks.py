@@ -20,6 +20,15 @@ TOOLS_TO_TEST = [
 
 print('Starting benchmark with {0} directories containing {1} files each ...'.format(DIR_COUNT, LIB_COUNT))
 
+PY2 = sys.version_info[0] == 2
+
+def chomp(s):
+	for sep in ['\r\n', '\n', '\r']:
+		if s.endswith(sep):
+			return s[:-len(sep)]
+
+	return s
+
 def format_time(start, end):
 	seconds = end - start
 	m, s = divmod(seconds, 60)
@@ -45,6 +54,15 @@ def run_and_get_stdall(command):
 	if err:
 		out += err
 
+	# Convert the output into unicode
+	if PY2:
+		out = unicode(out, 'UTF-8')
+	else:
+		out = str(out, 'UTF-8')
+
+	# Chomp the terminating newline off the ends of output
+	out = chomp(out)
+
 	# Get the return code
 	rc = p.returncode
 	if hasattr(os, 'WIFEXITED') and os.WIFEXITED(rc):
@@ -52,7 +70,7 @@ def run_and_get_stdall(command):
 
 	# Throw if there was an error
 	if rc != 0:
-		raise Exception('Return not 0 on: ' + command + ', ' + out)
+		raise Exception('Return not 0 on: {0}, {1}'.format(command, out))
 
 	return out
 
@@ -70,7 +88,7 @@ for d in range(DIR_COUNT):
 	os.chdir(str(d))
 	for n in range(LIB_COUNT):
 		code_name = 'l{0}.c'.format(n)
-		with open(code_name, 'wb') as f:
+		with open(code_name, 'w') as f:
 			code = "int fn_" + str(d) + "_" + str(n) + "(int a, int b) { \r\n" + \
 			"	return a + b;\r\n" + \
 			"}\r\n\r\n"
@@ -78,14 +96,14 @@ for d in range(DIR_COUNT):
 			f.write(code)
 
 		code_name = 'l{0}.h'.format(n)
-		with open(code_name, 'wb') as f:
+		with open(code_name, 'w') as f:
 			code = "int fn_" + str(d) + "_" + str(n) + "(int a, int b);\r\n\r\n"
 
 			f.write(code)
 	os.chdir('..')
 
 # Make the C main
-with open('main.c', 'wb') as f:
+with open('main.c', 'w') as f:
 	code = ""
 	for d in range(DIR_COUNT):
 		for n in range(LIB_COUNT):
@@ -130,7 +148,7 @@ if 'cmake' in TOOLS_TO_TEST:
 	print('    clean time      : ' + format_time(start, end))
 
 	# CMake incremental test
-	run_and_get_stdall('touch ../c/{0}/l{1}.c'.format(DIR_COUNT / 2, LIB_COUNT / 2))
+	run_and_get_stdall('touch ../c/{0}/l{1}.c'.format(int(DIR_COUNT / 2), int(LIB_COUNT / 2)))
 	start = time.time()
 	r = run_and_get_stdall('make -j2')
 	#print(r)
@@ -149,7 +167,7 @@ if 'waf' in TOOLS_TO_TEST:
 	print('    clean time      : ' + format_time(start, end))
 
 	# Waf incremental test
-	run_and_get_stdall('touch c/{0}/l{1}.c'.format(DIR_COUNT / 2, LIB_COUNT / 2))
+	run_and_get_stdall('touch c/{0}/l{1}.c'.format(int(DIR_COUNT / 2), int(LIB_COUNT / 2)))
 	start = time.time()
 	run_and_get_stdall('./waf build -j2')
 	end = time.time()
@@ -167,7 +185,7 @@ if 'raise' in TOOLS_TO_TEST:
 	print('    clean time      : ' + format_time(start, end))
 
 	# Raise incremental test
-	run_and_get_stdall('touch c/{0}/l{1}.c'.format(DIR_COUNT / 2, LIB_COUNT / 2))
+	run_and_get_stdall('touch c/{0}/l{1}.c'.format(int(DIR_COUNT / 2), int(LIB_COUNT / 2)))
 	start = time.time()
 	run_and_get_stdall('./raise build')
 	end = time.time()
@@ -185,11 +203,13 @@ if 'make' in TOOLS_TO_TEST:
 	print('    clean time      : ' + format_time(start, end))
 
 	# Make incremental test
-	run_and_get_stdall('touch c/{0}/l{1}.c'.format(DIR_COUNT / 2, LIB_COUNT / 2))
+	run_and_get_stdall('touch c/{0}/l{1}.c'.format(int(DIR_COUNT / 2), int(LIB_COUNT / 2)))
 	start = time.time()
 	r = run_and_get_stdall('make -j2')
 	#print(r)
 	end = time.time()
 	print('    incremental time: ' + format_time(start, end))
 	os.chdir('..')
+
+
 
