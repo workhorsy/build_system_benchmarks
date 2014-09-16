@@ -2,6 +2,7 @@ import sys, os
 import time, datetime
 import shutil
 import subprocess
+import multiprocessing
 
 
 # Configuration
@@ -21,6 +22,7 @@ TOOLS_TO_TEST = [
 print('Starting benchmark with {0} directories containing {1} files each ...'.format(DIR_COUNT, LIB_COUNT))
 
 PY2 = sys.version_info[0] == 2
+CPU_COUNT = multiprocessing.cpu_count()
 
 def chomp(s):
 	for sep in ['\r\n', '\n', '\r']:
@@ -142,7 +144,7 @@ if 'cmake' in TOOLS_TO_TEST:
 	run_and_get_stdall('cmake ..')
 	print('CMake benchmark ...')
 	start = time.time()
-	r = run_and_get_stdall('make -j2')
+	r = run_and_get_stdall('make -j{0}'.format(CPU_COUNT))
 	#print(r)
 	end = time.time()
 	print('    clean time      : ' + format_time(start, end))
@@ -150,7 +152,7 @@ if 'cmake' in TOOLS_TO_TEST:
 	# CMake incremental test
 	run_and_get_stdall('touch ../c/{0}/l{1}.c'.format(int(DIR_COUNT / 2), int(LIB_COUNT / 2)))
 	start = time.time()
-	r = run_and_get_stdall('make -j2')
+	r = run_and_get_stdall('make -j{0}'.format(CPU_COUNT))
 	#print(r)
 	end = time.time()
 	print('    incremental time: ' + format_time(start, end))
@@ -162,14 +164,14 @@ if 'waf' in TOOLS_TO_TEST:
 	run_and_get_stdall('./waf configure')
 	print('Waf benchmark ...')
 	start = time.time()
-	run_and_get_stdall('./waf build -j2')
+	run_and_get_stdall('./waf build -j{0}'.format(CPU_COUNT))
 	end = time.time()
 	print('    clean time      : ' + format_time(start, end))
 
 	# Waf incremental test
 	run_and_get_stdall('touch c/{0}/l{1}.c'.format(int(DIR_COUNT / 2), int(LIB_COUNT / 2)))
 	start = time.time()
-	run_and_get_stdall('./waf build -j2')
+	run_and_get_stdall('./waf build -j{0}'.format(CPU_COUNT))
 	end = time.time()
 	print('    incremental time: ' + format_time(start, end))
 	os.chdir('..')
@@ -197,7 +199,7 @@ if 'make' in TOOLS_TO_TEST:
 	os.chdir('make')
 	print('Make benchmark ...')
 	start = time.time()
-	r = run_and_get_stdall('make -j2')
+	r = run_and_get_stdall('make -j{0}'.format(CPU_COUNT))
 	#print(r)
 	end = time.time()
 	print('    clean time      : ' + format_time(start, end))
@@ -205,7 +207,7 @@ if 'make' in TOOLS_TO_TEST:
 	# Make incremental test
 	run_and_get_stdall('touch c/{0}/l{1}.c'.format(int(DIR_COUNT / 2), int(LIB_COUNT / 2)))
 	start = time.time()
-	r = run_and_get_stdall('make -j2')
+	r = run_and_get_stdall('make -j{0}'.format(CPU_COUNT))
 	#print(r)
 	end = time.time()
 	print('    incremental time: ' + format_time(start, end))
